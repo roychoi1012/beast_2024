@@ -25,15 +25,16 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 	int32_t cnt = 0;
 
 	int32_t* idx = (int32_t*)calloc(len_T, sizeof(int32_t));
-	char* str = (char*)calloc(len_P, sizeof(char*));
+	char* str = (char*)calloc(len_P+1, sizeof(char));
 
 	for (int32_t i = 0; i <= (len_T - len_P); i++) {
 		// adjust range to search
-		strncpy(str, T + i, len_P);
+		strncpy(str, &T[i], len_P);
 
 		for (int32_t j = len_P-1; j >= 0; j--) {
 			// if there is a new string (character) in text which is not in pattern
-			if (strchr(P, str[j]) == NULL) {
+			char* c_ptr = (char*)strchr(P, str[j]);
+			if (NULL == c_ptr) {
 				i += j;
 				break;
 			}
@@ -67,8 +68,8 @@ int
 main(void) 
 {
 	// T = text, P = pattern
-	char* T = (char*)calloc(100000, sizeof(char*));
-	char* P = (char*)calloc(100000, sizeof(char*));
+	char* T = (char*)calloc(1000, sizeof(char*));
+	char* P = (char*)calloc(1000, sizeof(char*));
 
 	scanf("%[^\n]s", T);
 	scanf(" %[^\n]s", P);
