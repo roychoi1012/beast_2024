@@ -27,7 +27,7 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 	int32_t* idx = (int32_t*)calloc(len_T, sizeof(int32_t));
 	char* str = (char*)calloc(len_P+1, sizeof(char));
 
-	for (int32_t i = 0; i <= (len_T - len_P); i++) {
+	for (int32_t i = 0; i < (len_T - len_P); i++) {
 		// adjust range to search
 		strncpy(str, &T[i], len_P);
 
