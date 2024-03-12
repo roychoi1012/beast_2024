@@ -5,38 +5,35 @@
 #include <stdint.h>
 
 /*
-	How to approach
-	function search_pattern
-	1. Compare txt with ptn in range of len(ptn), beginning at the right side.
-	2. If there is a new string (character) in txt which is not in ptn,
-	3. Search again after the new string.
-	4. Repeat the process until finding ptn in txt.
+How to approach
+function search_pattern
+1. Compare txt with ptn in range of len(ptn), beginning at the right side.
+2. If there are new string in txt which is not in ptn,
+3. Research after new string.
+4. Repeat these process until find ptn in txt.
 
-	In best case, time complexity is the same as 'Boyer-Moore'
-	But, in worst case, time complexity is the same as 'brute-force'
+In best case, time complexity is same with 'Boyer-Moore'
+But, in worst case, time complexity is same with 'brute-force'
 */
 
-// @brief
-// @return		the number that they are found and indices where they are found
+//@brief		return how many times they are founded and index where they are founded
 void
 search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_P) 
 {
 	int32_t next = 0;
 	int32_t cnt = 0;
 
-	int32_t* idx = (int32_t*)calloc(len_T, sizeof(int32_t));
-	char* str = (char*)calloc(len_P+1, sizeof(char));
+	int32_t* idx = calloc(len_T, sizeof(int32_t));
+	char* str = calloc(len_P, sizeof(char*));
 
-	for (int32_t i = 0; i < (len_T - len_P); i++) {
+	for (int32_t i = 0; i <= (len_T - len_P); i++) {
 		// adjust range to search
-		strncpy(str, &T[i], len_P);
+		strncpy(str, T + i, len_P);
 
 		for (int32_t j = len_P-1; j >= 0; j--) {
-			// if there is a new string (character) in text which is not in pattern
-			char* c_ptr = (char*)strchr(P, str[j]);
-			if (NULL == c_ptr) {
+			// if there are new string in text which is not in pattern
+			if (strchr(P, str[j]) == NULL) {
 				i += j;
-				break;
 			}
 
 			if (P[j] == str[j]) {
@@ -50,26 +47,23 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 		}
 	}
 
-	// result
+  // result
 	printf("%d\n", cnt);
 
 	for (int32_t i = 0; i < cnt; i++) {
 		printf("%d ", idx[i]);
 	}
-	printf("\n");
 
-	free(idx); idx = 0;
-	free(str); str = 0;
-
-	return;
+	free(idx);
+	free(str);
 }
 
 int 
-main(void) 
+main() 
 {
 	// T = text, P = pattern
-	char* T = (char*)calloc(1000, sizeof(char*));
-	char* P = (char*)calloc(1000, sizeof(char*));
+	char* T = calloc(100000, sizeof(char*));
+	char* P = calloc(100000, sizeof(char*));
 
 	scanf("%[^\n]s", T);
 	scanf(" %[^\n]s", P);
@@ -79,5 +73,4 @@ main(void)
 
 	search_ptn(T, P, len_T, len_P);
 
-	return 1;
 }
