@@ -67,7 +67,9 @@ main()
 	char* P = calloc(100000, sizeof(char*));
 
 	scanf("%[^\n]s", T);
-	scanf(" %[^\n]s", P);
+	// edited. Remove newline character
+	getchar();
+	scanf("%[^\n]s", P);
 
 	int32_t len_T = strlen(T);
 	int32_t len_P = strlen(P);
