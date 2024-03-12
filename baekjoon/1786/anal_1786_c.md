@@ -54,5 +54,5 @@ for (int32_t i = 0; i <= (len_T - len_P); i++) {
 
 #### How to improve?
 
-- Line 8과 9사이에 `break` 추가하여 Line 5의 `for`-loop의 jump 허용__??__; __즉, 검증된 idea가 아니고 확인해봐야 함__
-- 또는 다른 방법을 사용하여 loop variant `j`를 jump하게 해야하는데, 이걸 찾으면 결국 BM algorithm이나 KMP로 수렴__??__
+- Line 8과 9사이에 `break` 추가하여 Line 5의 `for`-loop의 jump 허용 **??**; __즉, 검증된 idea가 아니고 확인해봐야 함__
+- 또는 다른 방법을 사용하여 loop variant `j`를 jump하게 해야하는데, 이걸 찾으면 결국 BM algorithm이나 KMP로 수렴 **??** 
