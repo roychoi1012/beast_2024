@@ -47,7 +47,7 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 		}
 	}
 
-  // result
+	// result
 	printf("%d\n", cnt);
 
 	for (int32_t i = 0; i < cnt; i++) {
