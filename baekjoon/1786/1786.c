@@ -41,10 +41,11 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 				// success to search pattern in  text
 				if (next == len_P) {
 					idx[cnt++] = i + 1;
-					next = 0;
 				}
 			}
 		}
+		// edited.
+		next = 0;
 	}
 
 	// result
