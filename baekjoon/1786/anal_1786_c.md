@@ -34,6 +34,8 @@ for (int32_t i = 0; i <= (len_T - len_P); i++) {
 
 ##### Evaluation
 
+1. Correctness: 옳게 동작하는 것인가**??**
+2. Complexity
 - Notation: $n=|T|,m=|P|$ where $T$ is a text  and $P$ is a pattern
 - Assumptions
   - A#1: A best case: Line 1의 `for`-loop이 $n/m$ 번 수행
