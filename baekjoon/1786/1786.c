@@ -55,8 +55,8 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 		printf("%d ", idx[i]);
 	}
 
-	free(idx);
-	free(str);
+	free(idx); idx = 0;
+	free(str); str = 0;
 }
 
 int 
@@ -76,4 +76,6 @@ main()
 
 	search_ptn(T, P, len_T, len_P);
 
+	free(T); T = 0;
+	free(P); P = 0;
 }
