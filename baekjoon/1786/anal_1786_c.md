@@ -25,19 +25,24 @@ for (int32_t i = 0; i <= (len_T - len_P); i++) {
 
 
 
-##### key ideas of improvement
+#### Notation
+
+- Notation: $n=|T|,m=|P|$ where $T$ is a text  and $P$ is a pattern
+
+
+
+#### key ideas of improvement
 
 - Line 1:  `for`-loop의 the number of iterations $\leq $  `len_T`: text `T`의 tail 끝까지 수행할 필요없음
-- Line 9: Line 1에서 `for`-loop의 loop variant `i`가 $i\gets i+1$로 증가함과 동시에 Line 8의 조건을 만족하면 Line 9에서 loop variant `i`의 jump가 가능. Best case의 경우 $i\gets i+|P|-1$. 
+- Line 9: Line 1에서 `for`-loop의 loop variant `i`가 $i\gets i+1$로 증가함과 동시에 Line 8의 조건을 만족하면 Line 9에서 loop variant `i`의 jump가 가능. Best case의 경우 $i\gets i+m-1$ 수행 후, $i\gets i+1$. 
 
 
 
-##### Evaluation
+#### Evaluation
 
 1. Correctness 
 2. Complexity
 
-- Notation: $n=|T|,m=|P|$ where $T$ is a text  and $P$ is a pattern
 - Assumptions
   - A#1: A best case: Line 1의 `for`-loop이 $n/m$ 번 수행
   - A#2: Lines 11-18가 1번 실행
@@ -53,7 +58,7 @@ for (int32_t i = 0; i <= (len_T - len_P); i++) {
   - Line 5의 nested `for`-loop: $O(m^2)$ 수행 
   - Thus, the total complexity is $n/m\cdot O(m^2)=O(nm)$ even in best case
 
-
+  
 
 #### How to improve?
 
