@@ -34,8 +34,9 @@ for (int32_t i = 0; i <= (len_T - len_P); i++) {
 
 ##### Evaluation
 
-1. Correctness: 옳게 동작하는 것인가**??**
+1. Correctness 
 2. Complexity
+
 - Notation: $n=|T|,m=|P|$ where $T$ is a text  and $P$ is a pattern
 - Assumptions
   - A#1: A best case: Line 1의 `for`-loop이 $n/m$ 번 수행
@@ -58,3 +59,4 @@ for (int32_t i = 0; i <= (len_T - len_P); i++) {
 
 - Line 8과 9사이에 `break` 추가하여 Line 5의 `for`-loop의 jump 허용 **??**; __즉, 검증된 idea가 아니고 확인해봐야 함__
 - 또는 다른 방법을 사용하여 loop variant `j`를 jump하게 해야하는데, 이걸 찾으면 결국 BM algorithm이나 KMP로 수렴 **??** 
+- Line 27: `str`의 `calloc(...)` 생략하고 pointer로 사용

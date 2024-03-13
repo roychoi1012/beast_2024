@@ -48,7 +48,7 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 		}
 	}
 
-  // result
+	// result
 	printf("%d\n", cnt);
 
 	for (int32_t i = 0; i < cnt; i++) {
@@ -58,14 +58,18 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 
 	free(idx); idx = 0;
 	free(str); str = 0;
+
+	return;
 }
 
 int 
 main() 
 {
+	const size_t BUFFER_LENGTH = 100000;
+
 	// T = text, P = pattern
-	char* T = (char*)calloc(100000, sizeof(char));
-	char* P = (char*)calloc(100000, sizeof(char));
+	char* T = (char*)calloc(BUFFER_LENGTH, sizeof(char));
+	char* P = (char*)calloc(BUFFER_LENGTH, sizeof(char));
 
 	scanf("%[^\n]s", T);
 	scanf(" %[^\n]s", P);
