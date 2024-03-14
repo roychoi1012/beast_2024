@@ -11,9 +11,6 @@ function search_pattern
 2. If there are new string in txt which is not in ptn,
 3. Research after new string.
 4. Repeat these process until find ptn in txt.
-
-In best case, time complexity is same with 'Boyer-Moore'
-But, in worst case, time complexity is same with 'brute-force'
 */
 
 //@brief		return how many times they are founded and index where they are founded
@@ -24,7 +21,7 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 	int32_t cnt = 0;
 
 	int32_t* idx = calloc(len_T, sizeof(int32_t));
-	char* str = calloc(len_P, sizeof(char*));
+	char* str = calloc(len_P+1, sizeof(char));
 
 	for (int32_t i = 0; i <= (len_T - len_P); i++) {
 		// adjust range to search
@@ -32,8 +29,10 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 
 		for (int32_t j = len_P-1; j >= 0; j--) {
 			// if there are new string in text which is not in pattern
-			if (strchr(P, str[j]) == NULL) {
+			char* ptr = strchr(P, str[j]);
+			if (ptr == NULL) {
 				i += j;
+				break;
 			}
 
 			if (P[j] == str[j]) {
@@ -44,7 +43,6 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 				}
 			}
 		}
-		// edited.
 		next = 0;
 	}
 
@@ -57,17 +55,17 @@ search_ptn(const char* T, const char* P, const int32_t len_T, const int32_t len_
 
 	free(idx); idx = 0;
 	free(str); str = 0;
+
+	return;
 }
 
-int 
-main() 
-{
+int main() {
 	// T = text, P = pattern
-	char* T = calloc(100000, sizeof(char*));
-	char* P = calloc(100000, sizeof(char*));
+	char* T = calloc(100000, sizeof(char));
+	char* P = calloc(100000, sizeof(char));
 
 	scanf("%[^\n]s", T);
-	// edited. Remove newline character
+	// remove newline chracter
 	getchar();
 	scanf("%[^\n]s", P);
 
@@ -78,4 +76,6 @@ main()
 
 	free(T); T = 0;
 	free(P); P = 0;
+
+	return 0;
 }
