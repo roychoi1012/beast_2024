@@ -5,140 +5,133 @@
 #include <stdint.h>
 
 typedef struct node {
-	char data;
-	struct node* rlink;
-	struct node* llink;
+    char data;
+    struct node* rlink;
+    struct node* llink;
 }node;
 
-typedef node* dllptr_t;
-
-//void
-//insert_tail(dllptr_t* L, char* data)
-//{
-//		cursor = L;
-//	// calloc => create a node (llink, data,rlink)
-//	if (0 == L) {
-//
-//	}
-//	else {
-//		while (0 != cursor->rlink)
-//			cursor = cursor->rlink;
-//		// conect
-//	}
-//}
-
-int main() {
-	dllptr_t* L = NULL;
-
-	node* cur = (node*)malloc(sizeof(node));
-	cur->data = NULL;
-	cur->rlink = cur->llink = NULL;
-
-	// create node until input text is '\n'
-	char t;
-	int32_t len = 0;
-	while ((t = getchar()) != '\n') {
-		node* newnode = (node*)malloc(sizeof(node));
-		newnode->data = t;
-
-		newnode->llink = cur;
-		newnode->rlink = NULL;
-		cur->rlink = newnode;
-		cur = newnode;
-	}
+//typedef node* dllptr_t;
 
 
-	int32_t num;
-	scanf("%d", &num);
+node*  L(node** cur) 
+{
+    if ((*cur)->llink != NULL) {
+        *cur = (*cur)->llink;
+    }
+}
 
-	char function[10];
-	char new_;
-	while (num--) {
-		//fflush(stdin);
-		scanf("%s", function);
+node* D(node** cur)
+{
+    if ((*cur)->rlink != NULL) {
+        *cur = (*cur)->rlink;
+    }
+}
 
-		// L
-		if (!strcmp(function, "L")) {
-			if (cur->llink != NULL) {
-				cur = cur->llink;
-			}
-			//printf("cursor node is : %c\n", cur->data);
-		}
+node* B(node** cur)
+{
+    if ((*cur)->llink != NULL) {
+        if ((*cur)->rlink == NULL) {
+            *cur = (*cur)->llink;
+            (*cur)->rlink = NULL;
+        }
+        else {
+            (*cur)->llink->rlink = (*cur)->rlink;
+            (*cur)->rlink->llink = (*cur)->llink;
+            (*cur) = (*cur)->llink;
+        }
+    }
+}
 
-		// D
-		else if (!strcmp(function, "D")) {
-			if (cur->rlink != NULL) {
-				cur = cur->rlink;
-			}
-			//printf("cursor node is : %c\n", cur->data);
-		}
+node* P(node** cur, const char new_) 
+{
+    node* add = (node*)malloc(sizeof(node));
+    add->data = new_;
+    add->llink = add->rlink = NULL;
+    //printf("data of add is : %c\n", add->data);
 
-		// B
-		else if (!strcmp(function, "B")) {
-			if (cur->llink != NULL) {
-				if (cur->rlink == NULL) {
-					cur = cur->llink;
-					cur->rlink = NULL;
-				}
-				else {
-					cur->llink->rlink = cur->rlink;
-					cur->rlink->llink = cur->llink;
-					cur = cur->llink;
-				}
-			}
-			//printf("now cursor in on : %c\n", cur->data);
-		}
+    if ((*cur)->rlink == NULL) {
+        (*cur)->rlink = add;
+        add->llink = *cur;
+        add->rlink = NULL;
+        *cur = (*cur)->rlink;
+    }
+    else if (*cur == NULL) {
+        add->llink = NULL;
+        add->rlink = *cur;
+        (*cur)->llink = add;
+        *cur = (*cur)->llink;
+    }
+    else {
+        add->rlink = (*cur)->rlink;
+        add->llink = *cur;
+        (*cur)->rlink->llink = add;
+        (*cur)->rlink = add;
+        *cur = (*cur)->rlink;
 
+    }
+}
 
-		// P
-		else if (!strcmp(function, "P")) {
-			scanf(" %c", &new_);
+int main() 
+{
+    //dllptr_t* ptr = NULL;
 
-			node* add = (node*)malloc(sizeof(node));
-			add->data = new_;
-			//printf("data of add is : %c\n", add->data);
+    node* cur = (node*)malloc(sizeof(node));
+    cur->data = '!';
+    cur->rlink = cur->llink = NULL;
 
-			if (cur->rlink == NULL) {
-				cur->rlink = add;
-				add->llink = cur;
-				add->rlink = NULL;
-				cur = cur->rlink;
-			}
-			else if (cur->llink == NULL) {
-				add->llink = NULL;
-				add->rlink = cur;
-				cur->llink = add;
-				cur = cur->llink;
-			}
-			else {
-				add->rlink = cur->rlink;
-				add->llink = cur;
-				cur->rlink->llink = add;
-				cur->rlink = add;
-				cur = cur->rlink;
+    char t;
+    while ((t = getchar()) != '\n') {
+        node* newnode = (node*)malloc(sizeof(node));
+        newnode->data = t;
 
-			}
-
-			//printf("current cursor is on : %c\n", cur->data);
-		}
-		//fflush(stdin);
-
-	}
-	
-	//printf("let's print\n");
-
-	while (cur->llink != NULL) {
-		cur = cur->llink;
-	}
-
-	//printf("current cursor is on : %c\n", cur->data);
-
-	while(cur->rlink != NULL){
-		printf("%c", cur->data);
-		cur = cur->rlink;
-	}
-	printf("%c", cur->data);
+        newnode->llink = cur;
+        newnode->rlink = NULL;
+        cur->rlink = newnode;
+        cur = newnode;
+    }
 
 
-	return 0;
+    int32_t num;
+    scanf("%d", &num);
+
+    char function[10];
+    char new_;
+    while (num--) {
+        scanf("%s", function);
+
+        // L
+        if (!strcmp(function, "L")) {
+            L(&cur);
+        }
+
+        // D
+        else if (!strcmp(function, "D")) {
+            D(&cur);
+        }
+
+        // B
+        else if (!strcmp(function, "B")) {
+            B(&cur);
+        }
+
+        // P
+        else if (!strcmp(function, "P")) {
+            scanf(" %c", &new_);
+            P(&cur, new_);
+        }
+    }
+
+
+    while (cur->llink == NULL) {
+        cur = cur->llink;
+    }
+    cur = cur->rlink;
+
+
+    while (cur != NULL) {
+        printf("%c", cur->data);
+        cur = cur->rlink;
+    }
+
+    return 0;
 }
