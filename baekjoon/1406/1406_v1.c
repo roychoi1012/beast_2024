@@ -4,8 +4,9 @@
 #include <stdint.h>
 
 /*
-@brief      a node structure
-*/
+ * @brief       a node structure
+ * @struct      node_t
+ */
 typedef struct node {
     char data;
     struct node* rlink;
@@ -13,17 +14,17 @@ typedef struct node {
 } node_t;
 
 /*
-@brief      pointer types to a node structure
+* @brief      pointer types to a node structure
 */
 typedef node_t* nodeptr_t;
 
 /*
-@brief     execute L-command to move backward direction (i.e., move to the left by one node) 
+ * @brief     execute L-command to move backward direction (i.e., move to the left by one node) 
 */
 void  
-L_ftn(nodeptr_t* cur) 
+L_ftn(const nodeptr_t head, nodeptr_t* cur) 
 {
-    if ('!' != (*cur)->llink->data) {
+    if (head != *cur) {
         *cur = (*cur)->llink;
     }
 
@@ -31,12 +32,12 @@ L_ftn(nodeptr_t* cur)
 }
 
 /*
-@brief      execute D-command to move forward direction (i.e., move to the right by one node)
-*/
+ * @brief      execute D-command to move forward direction (i.e., move to the right by one node)
+ */
 void 
-D_ftn(nodeptr_t* cur)
+D_ftn(const nodeptr_t tail, nodeptr_t* cur)
 {
-    if ('@' != (*cur)->rlink->data) {
+    if (tail != *cur) {
         *cur = (*cur)->rlink;
     }
 
@@ -44,60 +45,79 @@ D_ftn(nodeptr_t* cur)
 }
 
 /*
-@brief      execute B-command to remove a node at the left of "cursor" and 
-            to locate the cursor at the left node of the removed node
-*/
+ * @brief    execute B-command to remove a node at the left of "cursor" and 
+ *           to locate the cursor at the left node of the removed node
+ */
 void 
-B_ftn(nodeptr_t* cur)
+B_ftn(const nodeptr_t head, nodeptr_t* cur)
 {
-    node_t* del_node = (*cur)->llink;
+    node_t* left_node = (head == *cur) ? head : (*cur)->llink;
 
-    if ('!' != (*cur)->llink->data) {
-        (*cur)->llink = del_node->llink;
-        del_node->llink->rlink = *cur;
-        del_node->llink = del_node->rlink = 0;
+    if (head != left_node) {
+        (*cur)->llink = left_node->llink;
+        left_node->llink->rlink = *cur;
+        /// free the target node
+        if (0 != left_node) {
+            free(left_node);
+            left_node = 0;
+        }
     }
 
     return;
 }
 
 /*
-@brief      execure P-command to insert a node with "data" at the left of "cursor"
-*/
+ * @brief      execute P-command to insert a node with "data" at the left of "cursor"
+ */
 void
-P_ftn(nodeptr_t* cur, const char data) 
+P_ftn(const nodeptr_t head, nodeptr_t* cur, const char data) 
 {
+    uint8_t cursor_at_head = 0;
     node_t* new_node = (node_t*)calloc(1, sizeof(node_t));
 
     if (0 == new_node) return;
 
+    /// the case that the cursor is located at the head node
+    if (head == *cur) {
+        *cur = (*cur)->rlink;
+        cursor_at_head = 1;
+    }
+
+    /// insertion
     new_node->data = data;
     new_node->llink = (*cur)->llink;
     new_node->rlink = *cur;
     (*cur)->llink->rlink = new_node;
     (*cur)->llink = new_node;
 
+    /// rollback the cursor in that case 
+    if (1 == cursor_at_head) {
+        (*cur) = (*cur)->llink->llink;
+    }
+
     return;
 }
 
 /*
-@brief      print the list
-*/
+ * @brief      print the list
+ */
 void
-print(const nodeptr_t list) 
+print(const nodeptr_t head, const nodeptr_t tail) 
 {
-    node_t* cursor = list->rlink;
+    node_t* cursor = head->rlink;
 
-    printf("[");
-    while ('@' != cursor->data) {
-        printf("%c ", cursor->data);
+    while (tail != cursor) {
+        printf("%c", cursor->data);
         cursor = cursor->rlink;
     }
-    printf("]\n");
+    printf("\n");
 
     return;
 }
 
+/*
+ * @brief       deallocation
+ */
 void
 free_list(nodeptr_t* list) 
 {
@@ -106,8 +126,10 @@ free_list(nodeptr_t* list)
     while (1) {
         if (0 != head) {
             node_t* del_node = head;
+
             head = head->rlink;
-            free(del_node); del_node = 0;
+            free(del_node); 
+            del_node = 0;
         }
         else
             break;
@@ -122,13 +144,14 @@ int main(int argc, char** argv)
 
     char t = 0;
     node_t* cur = 0;
+    /// sentinel nodes
     node_t* headptr = (node_t*)calloc(1, sizeof(node_t));
     node_t* tailptr = (node_t*)calloc(1, sizeof(node_t));
 
     if (0 == headptr || 0 == tailptr) return -1;
 
     headptr->data = '!';
-    tailptr->data = '@';
+    tailptr->data = '?';
     headptr->rlink = headptr->llink = 0;
     tailptr->rlink = tailptr->llink = 0;
 
@@ -136,7 +159,7 @@ int main(int argc, char** argv)
 
     while ((t = getchar()) != '\n') {
         node_t* new_node = (node_t*)calloc(1, sizeof(node_t));
-        if (NULL == new_node) return -1;
+        if (0 == new_node) return -1;
 
         new_node->data = t;
         new_node->llink = cur;
@@ -159,26 +182,26 @@ int main(int argc, char** argv)
 
         /// L command
         if (0 == strcmp(function, "L")) {
-            L_ftn(&cur);
+            L_ftn(headptr, &cur);
         }
         /// D command
         else if (0 == strcmp(function, "D")) {
-            D_ftn(&cur);
+            D_ftn(tailptr, &cur);
         }
 
         /// B command
         else if (0 == strcmp(function, "B")) {
-            B_ftn(&cur);
+            B_ftn(headptr, &cur);
         }
 
         /// P command
         else if (!strcmp(function, "P")) {
             scanf(" %c", &data);
-            P_ftn(&cur, data);
+            P_ftn(headptr, &cur, data);
         }
     }
 
-    print(headptr);
+    print(headptr, tailptr);
     free_list(&headptr);
 
     return 0;
