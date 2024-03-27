@@ -67,7 +67,7 @@ B_ftn(nodeptr_t* cur)
 void
 P_ftn(nodeptr_t* cur, const char data) 
 {
-    node_t* new_node = (node_t*)malloc(sizeof(node_t));
+    node_t* new_node = (node_t*)calloc(1, sizeof(node_t));
 
     if (0 == new_node) return;
 
